@@ -1,84 +1,36 @@
-#  MedEase – Frontend (Next.js)
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-MedEase Frontend is the **web interface** for the MedEase digital healthcare platform.  
-It enables **Patients, Doctors, and Pharmacists** to securely interact with queues, consultations, digital prescriptions, and pharmacy workflows in real time.
+## Getting Started
 
-This repository contains the **Next.js frontend application** that consumes the MedEase Backend API.
+First, run the development server:
 
----
-
-##  Project Overview
-
-MedEase addresses critical healthcare workflow challenges by providing:
-
-1. Secure authentication for multiple roles
-2. Real-time patient queue tracking
-3. Doctor consultation dashboards
-4. Digital prescription access
-5. Pharmacy dispensing verification
-6. Clean, responsive healthcare UI
-
-The frontend communicates with the **MedEase Backend (Spring Boot REST API)** using secure HTTP requests.
-
----
-
-## 👥 Supported User Roles
-
-- **Patient:** Register, join queue, view prescriptions & notifications
-- **Doctor:** View queues, consult patients, create prescriptions ,add/update the patient's medical history
-- **Pharmacist:** View prescriptions, dispense medication
-- **Admin:** (Future) System monitoring & configuration
-
----
-
-##  Core Frontend Features
-
--  JWT-based authentication
--  Role-based route protection
--  Patient dashboard
--  Doctor dashboard
--  Pharmacy dashboard
--  Real-time queue visualization
--  Digital prescription viewer
--  Notification system
--  Mobile & desktop responsive layout
-
----
-
-## 🛠️ Tech Stack
-
-- **Framework:** Next.js (App Router)
-- **Language:** TypeScript / JavaScript
-- **Styling:** Tailwind CSS
-- **State Management:** React Context / Redux Toolkit
-- **HTTP Client:** Axios / Fetch
-- **Authentication:** JWT
-- **Build Tool:** Next.js Build System
-- **Containerization:** Docker
-- **Project Management:** GitHub Issues & Projects
-
-  ## ⚙️ Environment Variables
-
-Create a `.env.local` file using the  `.env.example` template 
-
-## How to get started to this project
-
-### 1️⃣ Clone the Repository using the git clone command 
-
-### 2️⃣ Install Dependencies
-npm install
-
-### 3️⃣ Run Development Server
+```bash
 npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-## 🧪 Testing (Planned)
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-- Jest
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## 🚀 Deployment
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-Supported platforms: Vercel
+## Learn More
 
-## 🔗 Backend Integration
+To learn more about Next.js, take a look at the following resources:
 
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
