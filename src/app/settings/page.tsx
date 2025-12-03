@@ -61,7 +61,7 @@ function SettingsPage() {
               <label className="block text-sm font-medium text-gray-700 mb-2">Specialization</label>
               <input
                 type="text"
-                defaultValue="Internal Medicine"
+                placeholder="eg:Internal Medicine"
                 className="w-full px-4 py-2 bg-purple-50 text-gray-300 border border-gray-300 rounded-lg"
               />
             </div>
