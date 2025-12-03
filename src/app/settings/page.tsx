@@ -73,9 +73,12 @@ function SettingsPage() {
                 rows={3}
               />
             </div>
+             <button className="px-6 py-2 w-full bg-blue-500 text-white rounded-lg hover:bg-blue-500">
+              Save the Profile Changes
+        </button>
           </div>
         </div>
-
+        
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
           <div className="flex items-center gap-3 mb-6">
             <FileText className="w-6 h-6 text-gray-600" />
@@ -133,8 +136,9 @@ function SettingsPage() {
               />
             </div>
           </div> 
-          <button className="px-6 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-500">
-          Save Changes
+          <br/>
+          <button className="px-6 py-2 w-full bg-blue-500 text-white rounded-lg hover:bg-blue-500">
+              Save the Clinic info Changes
         </button>
         </div>
         
