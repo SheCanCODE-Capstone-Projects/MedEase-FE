@@ -133,7 +133,7 @@ function SettingsPage() {
               />
             </div>
           </div> 
-          <button className="px-6 py-1 bg-blue-300 text-white rounded-lg hover:bg-blue-600">
+          <button className="px-6 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-500">
           Save Changes
         </button>
         </div>
@@ -166,7 +166,7 @@ function SettingsPage() {
             checked={is2FAEnabled}
             onChange={(e) => setIs2FAEnabled(e.target.checked)}
           />
-          <div className="w-12 h-6 bg-gray-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+          <div className="w-12 h-6 bg-gray-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-blue-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
         </label>
       </div>
 
@@ -196,7 +196,7 @@ function SettingsPage() {
 
       {/* Save Button */}
       <div className="flex justify-end">
-        <button className="bg-blue-300 w-full h-12 text-white px-70 py-4 rounded-xl flex items-center gap-3 hover:bg-blue-400 transition text-lg font-medium">
+        <button className="bg-blue-500 w-full h-12 text-white px-70 py-4 rounded-xl flex items-center gap-3 hover:bg-blue-400 transition text-lg font-medium">
           <Save className="w-5 h-5" />
           Save Security Settings
         </button>

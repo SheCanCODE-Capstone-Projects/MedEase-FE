@@ -3,7 +3,7 @@ import { Download, Search } from "lucide-react";
 
 function PrescriptionHistory() {
   const prescriptions: Prescription[] = [
-    { id: 'PRX-001', patient: 'John Doe', date: '1/15/2024', diagnosis: 'Hypertension management', medicines: 2 },
+    { id: 'PRX-001', patientName: 'John Doe', date: '1/15/2024', diagnosis: 'Hypertension management', notes: 'Monitor blood pressure regularly', patientId: 'PAT-001', medicines: [], status: 'completed' },
   ];
 
   return (
@@ -76,9 +76,9 @@ function PrescriptionHistory() {
                   <td className="py-4 px-4 text-gray-700">{prescription.patientId}</td>
                   <td className="py-4 px-4 text-gray-700">{prescription.date}</td>
                   <td className="py-4 px-4 text-gray-700">{prescription.diagnosis}</td>
-                  <td className="py-4 px-4 text-gray-700">{prescription.medicines} medicines</td>
+                  {/* <td className="py-4 px-4 text-gray-700">{prescription.medicines} medicines</td> */}
                   <td className="py-4 px-4">
-                    <button className="text-blue-600 hover:text-blue-600">View</button>
+                    <button className="text-blue-500 hover:text-blue-500">View</button>
                   </td>
                 </tr>
               ))}

@@ -58,7 +58,7 @@ export default function PatientRecords({ selectedPatient, setSelectedPatient }: 
                   <td className="py-4 px-4 text-gray-700">{patient.lastVisit}</td>
                   <td className="py-4 px-4 text-gray-700">{patient.prescriptions}</td>
                   <td className="py-4 px-4">
-                    <button className="text-blue-600 hover:text-blue-700">View</button>
+                    <button className="text-blue-500 hover:text-blue-500">View</button>
                   </td>
                 </tr>
               ))}

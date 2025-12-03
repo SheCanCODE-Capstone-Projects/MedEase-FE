@@ -35,7 +35,7 @@ export default function Sidebar({ currentPage, setCurrentPage }: SidebarProps) {
               className={`w-full text-sm flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                 currentPage === item.id
                   ? 'bg-blue-500 text-white'
-                  : 'text-blue-400 hover:bg-gray-800'
+                  : 'text-blue-500 hover:bg-gray-800'
               }`}
             >
               <Icon className="w-5 h-5" />

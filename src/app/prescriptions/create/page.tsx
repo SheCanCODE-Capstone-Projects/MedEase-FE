@@ -23,7 +23,7 @@ function CreatePrescription() {
               placeholder="Enter Patient ID (e.g., PAT-001)"
               className="flex-1 px-4 py-3 text-black bg-purple-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <button className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+            <button className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-500">
               <Search className="w-5 h-5" />
             </button>
           </div>
@@ -46,7 +46,7 @@ function CreatePrescription() {
         
         <div className="mb-4">
           <h3 className="text-gray-600 mb-4">Add First Medicine </h3>
-          <button className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center gap-2">
+          <button className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-500 flex items-center gap-2">
             <Plus className="w-5 h-5" />
             Add Medicine
           </button>
@@ -57,7 +57,7 @@ function CreatePrescription() {
         <button className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
           Cancel
         </button>
-        <button className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+        <button className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-500">
           Create Prescription
         </button>
       </div>

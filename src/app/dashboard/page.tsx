@@ -22,7 +22,7 @@ export default function Dashboard({ setCurrentPage }: DashboardProps) {
         </div>
         <button 
           onClick={() => setCurrentPage('create-prescription')}
-          className="px-4 py-2 bg-blue-500 text-sm text-white rounded-lg hover:bg-blue-600 flex items-center gap-2"
+          className="px-4 py-2 bg-blue-500 text-sm text-white rounded-lg hover:bg-blue-500 flex items-center gap-2"
         >
           <Plus className="w-3 h-3 border border-white rounded-full" />
           Add New Patient
@@ -62,7 +62,7 @@ export default function Dashboard({ setCurrentPage }: DashboardProps) {
             className="w-full p-2 bg-purple-50 hover:bg-white rounded-lg flex items-center gap-4 transition-colors"
           >
             <div className="w-10 h-10 bg-purple-50 rounded-full flex items-center justify-center">
-              <Plus className="w-5 h-5 text-blue-600" />
+              <Plus className="w-5 h-5 text-blue-500" />
             </div>
             <div className="text-left">
               <h3 className=" text-gray-900">Create New Prescription</h3>
@@ -75,7 +75,7 @@ export default function Dashboard({ setCurrentPage }: DashboardProps) {
             className="w-full p-2 bg-purple-50 hover:bg-white rounded-lg flex items-center gap-4 transition-colors"
           >
             <div className="w-10 h-10 bg-purple-50 rounded-full flex items-center justify-center">
-              <Users className="w-5 h-5 text-blue-600" />
+              <Users className="w-5 h-5 text-blue-500" />
             </div>
             <div className="text-left">
               <h3 className=" text-gray-900">Patient Records</h3>
@@ -88,7 +88,7 @@ export default function Dashboard({ setCurrentPage }: DashboardProps) {
             className="w-full p-2 bg-purple-50 hover:bg-white rounded-lg flex items-center gap-4 transition-colors"
           >
             <div className="w-10 h-10 bg-purple-50 rounded-full flex items-center justify-center">
-              <FileText className="w-5 h-5 text-blue-600" />
+              <FileText className="w-5 h-5 text-blue-500" />
             </div>
             <div className="text-left">
               <h3 className=" text-gray-900">Prescriptions History</h3>
