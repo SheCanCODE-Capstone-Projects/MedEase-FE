@@ -1,5 +1,5 @@
 import { Prescription } from "@/app/types";
-import { Download, Search } from "lucide-react";
+import { Download, Filter, Search, TrainFrontTunnel, TrainFrontTunnelIcon, User } from "lucide-react";
 
 function PrescriptionHistory() {
   const prescriptions: Prescription[] = [
@@ -10,7 +10,7 @@ function PrescriptionHistory() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Prescription History</h1>
+          <h1 className="text-3xl text-gray-900 mb-2">Prescription History</h1>
           <p className="text-gray-600">View and manage all prescriptions</p>
         </div>
         <div className="flex gap-3">
@@ -26,7 +26,10 @@ function PrescriptionHistory() {
       </div>
 
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-6">
-        <h3 className="font-semibold text-gray-900 mb-4">Filters</h3>
+         <h3 className="py-2 text-xl text-gray-900 flex items-center gap-2">
+            <Filter className="w-6 h-6" />
+            Filters
+          </h3>
         <p className="text-sm text-gray-600 mb-4">Filter prescriptions by search, status, and date</p>
         
         <div className="grid grid-cols-3 gap-4">
@@ -35,16 +38,16 @@ function PrescriptionHistory() {
             <input
               type="text"
               placeholder="Search by patient name, prescription ID..."
-              className="w-full bg-purple-50 text-black pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full text-sm bg-purple-50 text-black pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <select className="px-4 py-3 bg-purple-50 text-gray-600 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <select className="px-4 py-3 text-sm bg-purple-50 text-gray-600 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
             <option>All Statuses</option>
             <option>Active</option>
             <option>Pending</option>
             <option>Completed</option>
           </select>
-          <select className="px-4 py-3 bg-purple-50 text-gray-600 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <select className="px-4 py-3 text-sm bg-purple-50 text-gray-600 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
             <option>All Dates</option>
             <option>Today</option>
             <option>This Week</option>
@@ -69,11 +72,11 @@ function PrescriptionHistory() {
                 <th className="text-left py-3 px-4 text-sm font-semibold text-gray-600">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="text-sm">
               {prescriptions.map((prescription) => (
                 <tr key={prescription.id} className="border-b border-gray-100 hover:bg-gray-50">
                   <td className="py-4 px-4 text-blue-500">{prescription.id}</td>
-                  <td className="py-4 px-4 text-gray-700">{prescription.patientId}</td>
+                  <td className="py-4 px-4 text-gray-700">{prescription.patientName} <br/> <span className="text-gray-400 text-sm">{prescription.patientId}</span></td>
                   <td className="py-4 px-4 text-gray-700">{prescription.date}</td>
                   <td className="py-4 px-4 text-gray-700">{prescription.diagnosis}</td>
                   {/* <td className="py-4 px-4 text-gray-700">{prescription.medicines} medicines</td> */}
