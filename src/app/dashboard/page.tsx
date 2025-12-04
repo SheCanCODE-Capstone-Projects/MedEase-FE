@@ -21,7 +21,7 @@ export default function Dashboard({ setCurrentPage }: DashboardProps) {
           <p className="text-gray-600">Welcome back, Dr. Smith. Here's your practice summary.</p>
         </div>
         <button 
-          onClick={() => setCurrentPage('create-prescription')}
+          onClick={() => setCurrentPage('add-patient')}
           className="px-4 py-2 bg-blue-500 text-sm text-white rounded-lg hover:bg-blue-500 flex items-center gap-2"
         >
           <Plus className="w-3 h-3 border border-white rounded-full" />

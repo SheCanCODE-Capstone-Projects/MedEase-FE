@@ -53,7 +53,7 @@ function CreatePrescription() {
           
           </div>
 
-          <div className="space-y-4 border-gray-300 border-2 rounded-lg p-6">
+          <div className="space-y-4 shadow-lg border-2 rounded-lg p-6">
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Medicine Name</label>
@@ -100,6 +100,7 @@ function CreatePrescription() {
       <option>5 days</option>
       <option>7 days</option>
       <option>14 days</option>
+      <option>30 days</option>
     </select>
   </div>
 </div>
@@ -112,6 +113,7 @@ function CreatePrescription() {
                 className="w-full px-4 py-2 text-sm bg-purple-50 text-gray-400 border border-gray-300 rounded-lg"
               />
             </div>
+
 
           <button className="px-6 w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-500 flex items-center gap-3">
             <Plus className=" ml-25 w-5 h-5" />

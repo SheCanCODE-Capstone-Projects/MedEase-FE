@@ -10,6 +10,8 @@ import Dashboard from './dashboard/page';
 import PatientRecords from './patients/page';
 import PrescriptionHistory from './prescriptions/history/page';
 import SettingsPage from './settings/page';
+import AdddPatience from './components/Addpatients';
+import AddPatient from './components/Addpatients';
 
 export default function MedicalDashboard() {
   const [currentPage, setCurrentPage] = useState<PageType>('dashboard');
@@ -32,6 +34,7 @@ export default function MedicalDashboard() {
           )}
           {currentPage === 'prescription-history' && <PrescriptionHistory />}
           {currentPage === 'settings' && <SettingsPage />}
+          {currentPage === 'add-patient' && <AddPatient />}
         </main>
       </div>
     </div>

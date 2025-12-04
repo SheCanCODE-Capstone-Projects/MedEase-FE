@@ -18,7 +18,7 @@ export interface Stat {
   icon: any;
 }
 
-export type PageType = 'dashboard' | 'create-prescription' | 'patient-records' | 'prescription-history' | 'settings';
+export type PageType = 'dashboard' | 'create-prescription' | 'patient-records' | 'prescription-history' | 'settings' | 'add-patient' ;
 
 interface Medicine {
   id: string;
