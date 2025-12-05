@@ -1,29 +1,46 @@
 import { Heart, AlertTriangle, Lock } from "lucide-react"
 
-interface ChronicDisease {
+export interface ChronicDisease {
   name: string
-  severity: string
+  severity: "Mild" | "Moderate" | "Severe"
   status: string
 }
 
-interface Allergy {
+export interface Allergy {
   type: "Medicine" | "Food"
   name: string
   reaction: string
 }
 
-const chronicDiseases: ChronicDisease[] = [
+interface MedicalInformationProps {
+  chronicDiseases?: ChronicDisease[]
+  allergies?: Allergy[]
+}
+
+const defaultChronicDiseases: ChronicDisease[] = [
   { name: "Type 2 Diabetes", severity: "Moderate", status: "Well controlled" },
   { name: "Hypertension", severity: "Mild", status: "Well controlled" },
 ]
 
-const allergies: Allergy[] = [
+const defaultAllergies: Allergy[] = [
   { type: "Medicine", name: "Penicillin", reaction: "Skin rash" },
   { type: "Food", name: "Shellfish", reaction: "Breathing difficulties" },
   { type: "Medicine", name: "Naproxen", reaction: "Asthma flare" },
 ]
 
-export default function MedicalInformation() {
+const getSeverityColor = (severity: ChronicDisease['severity']) => {
+  switch (severity) {
+    case "Mild": return "bg-green-100 text-green-700"
+    case "Moderate": return "bg-yellow-100 text-yellow-700"
+    case "Severe": return "bg-red-100 text-red-700"
+    default: return "bg-gray-100 text-gray-700"
+  }
+}
+
+export default function MedicalInformation({ 
+  chronicDiseases = defaultChronicDiseases, 
+  allergies = defaultAllergies 
+}: MedicalInformationProps = {}) {
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex items-center justify-between mb-6">
@@ -55,7 +72,7 @@ export default function MedicalInformation() {
                   {disease.status}
                 </p>
               </div>
-              <span className="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">
+              <span className={`${getSeverityColor(disease.severity)} text-xs font-semibold px-3 py-1 rounded-full`}>
                 {disease.severity}
               </span>
             </div>

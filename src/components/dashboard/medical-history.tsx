@@ -1,6 +1,11 @@
+"use client"
 import { FileText } from "lucide-react"
 
 export default function MedicalHistory() {
+  const handleRequestReport = () => {
+    console.log('Requesting medical report...')
+  }
+
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex items-center gap-3 mb-6">
@@ -11,7 +16,11 @@ export default function MedicalHistory() {
         You can securely access your complete medical history through this portal. Please click the button below to
         review your records. Your information is protected, and only you or authorized medical staff can view it.
       </p>
-      <button className="w-full bg-blue-500 hover:bg-blue-600 text-white  py-2 px-4 rounded-md flex items-center justify-center gap-2">
+      <button 
+        type="button"
+        onClick={handleRequestReport}
+        className="w-full bg-blue-500 hover:bg-blue-600 text-white  py-2 px-4 rounded-md flex items-center justify-center gap-2"
+      >
         <FileText className="w-4 h-4" />
         Request your Medical Report
       </button>

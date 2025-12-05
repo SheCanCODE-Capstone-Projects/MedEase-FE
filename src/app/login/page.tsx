@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Lock, Mail, Shield } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, Shield, AlertCircle } from "lucide-react";
 
 export default function Login() {
   const router = useRouter();
@@ -12,15 +12,42 @@ export default function Login() {
     password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState<{email?: string; password?: string; general?: string}>({});
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors({});
     
-    if (formData.email && formData.password) {
-      setIsLoading(true);
+
+    const newErrors: {email?: string; password?: string} = {};
+    if (!formData.email) newErrors.email = "Email is required";
+    if (!formData.password) newErrors.password = "Password is required";
+    
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setIsLoading(true);
+    
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Invalid credentials");
+      }
+
+      const data = await response.json();
+      localStorage.setItem("authToken", data.token);
       router.push("/dashboard");
-    } else {
-      alert("Please fill in all fields");
+    } catch (error) {
+      setErrors({ general: "Invalid email or password. Please try again." });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -32,7 +59,7 @@ export default function Login() {
           style={{ width: "100%", maxWidth: "600px", minHeight: "639px" }}
         >
           <div className="p-6 sm:p-8">
-            {/* Header */}
+
             <div className="text-center mb-6 sm:mb-8">
               <div className="flex justify-center mb-4">
                 <div 
@@ -54,8 +81,16 @@ export default function Login() {
               </p>
             </div>
 
+
+            {errors.general && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 text-red-500" />
+                <p className="text-red-700 text-sm">{errors.general}</p>
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Email Field */}
+
               <div className="px-4 sm:px-12">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Email Address
@@ -64,18 +99,26 @@ export default function Login() {
                   <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                   <input
                     type="email"
-                    required
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                    className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ${
+                      errors.email ? 'border-red-300' : 'border-gray-300'
+                    }`}
                     placeholder="Enter your email"
                     value={formData.email}
-                    onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
-                    }
+                    onChange={(e) => {
+                      setFormData({ ...formData, email: e.target.value });
+                      if (errors.email) setErrors(prev => ({...prev, email: undefined}));
+                    }}
+                    disabled={isLoading}
                   />
                 </div>
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {errors.email}
+                  </p>
+                )}
               </div>
 
-              {/* Password Field */}
               <div className="px-4 sm:px-12">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Password
@@ -84,25 +127,35 @@ export default function Login() {
                   <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                   <input
                     type={showPassword ? "text" : "password"}
-                    required
-                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                    className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ${
+                      errors.password ? 'border-red-300' : 'border-gray-300'
+                    }`}
                     placeholder="Enter your password"
                     value={formData.password}
-                    onChange={(e) =>
-                      setFormData({ ...formData, password: e.target.value })
-                    }
+                    onChange={(e) => {
+                      setFormData({ ...formData, password: e.target.value });
+                      if (errors.password) setErrors(prev => ({...prev, password: undefined}));
+                    }}
+                    disabled={isLoading}
                   />
                   <button
                     type="button"
                     className="absolute right-3 top-3 h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors duration-200"
                     onClick={() => setShowPassword(!showPassword)}
+                    disabled={isLoading}
                   >
                     {showPassword ? <EyeOff /> : <Eye />}
                   </button>
                 </div>
+                {errors.password && (
+                  <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {errors.password}
+                  </p>
+                )}
               </div>
 
-              {/* Remember Me & Forgot Password */}
+
               <div className="flex items-center justify-between px-4 sm:px-12">
                 <label className="flex items-center">
                   <input
@@ -117,21 +170,27 @@ export default function Login() {
                 >
                   Forgot password?
                 </a>
-              </div>
-
-              {/* Submit Button */}
+              </div> 
+              
               <div className="px-4 sm:px-12">
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-blue-500 text-white py-3 px-4 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
+                  className="w-full bg-blue-500 text-white py-3 px-4 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
                 >
-                  {isLoading ? "Signing In..." : "Sign In"}
-                </button>
+                  {isLoading ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      Signing In...
+                    </>
+                  ) : (
+                    "Sign In"
+                  )}
+``                </button>
               </div>
             </form>
 
-            {/* Sign Up Link */}
+
             <div className="mt-6 text-center px-4 sm:px-12">
               <p className="text-sm text-gray-600">
                 Don't have an account?{" "}

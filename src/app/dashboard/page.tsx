@@ -11,14 +11,20 @@ export default function Dashboard() {
       <DashboardHeader />
       <div className="px-4 py-6 -mt-16 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column - Profile and Medical Info */}
           <div className="lg:col-span-2 space-y-6">
-            <ProfileOverview />
+            <ProfileOverview 
+              name="<name>"
+              initials="<initials>"
+              referenceId="<reference_id>"
+              dateOfBirth="<date_of_birth>"
+              insurance="<insurance_provider>"
+              email="<email>"
+              phone="<phone_number>"
+            />
             <MedicalInformation />
             <MyPrescriptions />
           </div>
           
-          {/* Right Column - Join Queue and Medical History */}
           <div className="lg:col-span-1 space-y-6">
             <JoinQueue />
             <MedicalHistory />
