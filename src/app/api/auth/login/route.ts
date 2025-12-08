@@ -12,7 +12,6 @@ export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
 
-    // Trim whitespace from inputs
     const trimmedEmail = email?.trim();
     const trimmedPassword = password?.trim();
 
