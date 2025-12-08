@@ -115,44 +115,60 @@ function CreatePrescription() {
   const searchPatient = () => {
     const savedPatients = localStorage.getItem('patients');
     if (savedPatients) {
-      const patients = JSON.parse(savedPatients);
-      const patient = patients.find((p: any) => p.id === patientId);
-      if (patient) {
-        setFoundPatient(patient);
-        alert(`Patient found: ${patient.name}`);
-      } else {
+      try {
+        const patients = JSON.parse(savedPatients);
+        const patient = patients.find((p: any) => p.id === patientId);
+        if (patient) {
+          setFoundPatient(patient);
+        } else {
+          setFoundPatient(null);
+        }
+      } catch (error) {
+        console.error('Failed to parse patients data:', error);
         setFoundPatient(null);
-        alert('Patient not found. Please check the ID.');
       }
-    } else {
-      alert('No patients found in the system.');
     }
   };
 
   const savePrescription = (isDraft: boolean = false) => {
     if (!foundPatient || !diagnosis || medicines.length === 0) {
-      alert('Please search for a valid patient, add diagnosis, and at least one medicine.');
+      console.warn('Please search for a valid patient, add diagnosis, and at least one medicine.');
       return;
     }
     
-    const prescriptionId = `PRX-${Date.now().toString().slice(-6)}`;
-    const prescriptionData = {
-      id: prescriptionId,
-      patientId: foundPatient.id,
-      patientName: foundPatient.name,
-      date: new Date().toLocaleDateString(),
-      diagnosis,
-      notes: '',
-      medicines,
-      status: isDraft ? 'pending' : 'active'
-    };
-    
-    const existingPrescriptions = JSON.parse(localStorage.getItem('prescriptions') || '[]');
-    existingPrescriptions.push(prescriptionData);
-    localStorage.setItem('prescriptions', JSON.stringify(existingPrescriptions));
-    
-    alert(`Prescription ${isDraft ? 'saved as draft' : 'created and sent'} with ID: ${prescriptionId}`);
-    setPatientId(''); setDiagnosis(''); setMedicines([]); setFoundPatient(null);
+    try {
+      const prescriptionId = `PRX-${Date.now().toString().slice(-6)}`;
+      const prescriptionData = {
+        id: prescriptionId,
+        patientId: foundPatient.id,
+        patientName: foundPatient.name,
+        date: new Date().toLocaleDateString(),
+        diagnosis,
+        notes: '',
+        medicines,
+        status: isDraft ? 'pending' : 'active'
+      };
+      
+      const savedData = localStorage.getItem('prescriptions');
+      let existingPrescriptions = [];
+      
+      if (savedData) {
+        try {
+          existingPrescriptions = JSON.parse(savedData);
+        } catch (parseError) {
+          console.error('Failed to parse prescriptions, starting fresh:', parseError);
+          localStorage.removeItem('prescriptions');
+        }
+      }
+      
+      existingPrescriptions.push(prescriptionData);
+      localStorage.setItem('prescriptions', JSON.stringify(existingPrescriptions));
+      
+      console.log(`Prescription ${isDraft ? 'saved as draft' : 'created and sent'} with ID: ${prescriptionId}`);
+      setPatientId(''); setDiagnosis(''); setMedicines([]); setFoundPatient(null);
+    } catch (error) {
+      console.error('Failed to save prescription:', error);
+    }
   };
 
   return (

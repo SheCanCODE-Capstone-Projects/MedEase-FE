@@ -5,12 +5,12 @@ import type { PageType, Patient } from './types';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import CreatePrescription from './prescriptions/create/page';
-import Dashboard from './doctorDashboard/page';
 import PatientRecords from './patients/page';
 import PrescriptionHistory from './prescriptions/history/page';
 import SettingsPage from './settings/page';
 import AddPatient from './components/Addpatients';
 import ProfilePage from './components/ProfilePage';
+import Doctordashboard from './doctorDashboard/page';
 
 export default function MedicalDashboard() {
   const [currentPage, setCurrentPage] = useState<PageType>('dashboard');
@@ -23,7 +23,7 @@ export default function MedicalDashboard() {
       <div className="flex-1 overflow-auto lg:ml-0">
         <Header setCurrentPage={setCurrentPage} />
         <main className="p-4 lg:p-8">
-          {currentPage === 'dashboard' && <Dashboard setCurrentPage={setCurrentPage} />}
+          {currentPage === 'dashboard' && <Doctordashboard setCurrentPage={setCurrentPage} />}
           {currentPage === 'create-prescription' && <CreatePrescription />}
           {currentPage === 'patient-records' && (
             <PatientRecords 

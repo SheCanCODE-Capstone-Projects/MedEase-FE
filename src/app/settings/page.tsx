@@ -6,6 +6,7 @@ function SettingsPage() {
   const [is2FAEnabled, setIs2FAEnabled] = useState(true);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [profileData, setProfileData] = useState({
     fullName: '',
     email: '',
@@ -34,22 +35,34 @@ function SettingsPage() {
   };
 
   const updatePassword = () => {
-    if (!currentPassword || !newPassword) {
-      alert('Please fill in both current and new password.');
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      console.warn('Please fill in all password fields.');
+      return;
+    }
+    
+    if (newPassword !== confirmPassword) {
+      console.error('New password and confirmation do not match.');
       return;
     }
     
     const savedPassword = localStorage.getItem('userPassword');
-    if (savedPassword && savedPassword !== currentPassword) {
-      alert('Current password is incorrect.');
+    
+    if (!savedPassword) {
+      console.error('No password set. Please contact administrator to set initial password.');
+      return;
+    }
+    
+    if (savedPassword !== currentPassword) {
+      console.error('Current password is incorrect.');
       return;
     }
     
     localStorage.setItem('userPassword', newPassword);
     localStorage.setItem('securitySettings', JSON.stringify({ is2FAEnabled }));
-    alert('Password updated successfully!');
+    console.log('Password updated successfully!');
     setCurrentPassword('');
     setNewPassword('');
+    setConfirmPassword('');
   };
 
   const saveSecurity = () => {
@@ -63,8 +76,15 @@ function SettingsPage() {
     const savedSecurity = localStorage.getItem('securitySettings');
     
     if (savedProfile) {
-      setProfileData(JSON.parse(savedProfile));
-    } else {
+      try {
+        setProfileData(JSON.parse(savedProfile));
+      } catch (error) {
+        console.error('Failed to parse profile data:', error);
+        localStorage.removeItem('doctorProfile');
+      }
+    }
+    
+    if (!savedProfile) {
       setProfileData({
         fullName: 'Dr. John Smith',
         email: 'john.smith@hospital.com',
@@ -76,8 +96,15 @@ function SettingsPage() {
     }
     
     if (savedClinic) {
-      setClinicData(JSON.parse(savedClinic));
-    } else {
+      try {
+        setClinicData(JSON.parse(savedClinic));
+      } catch (error) {
+        console.error('Failed to parse clinic data:', error);
+        localStorage.removeItem('clinicInfo');
+      }
+    }
+    
+    if (!savedClinic) {
       setClinicData({
         name: 'City Medical Center',
         address: '123 Healthcare Ave, Medical District, NY 10001',
@@ -87,7 +114,14 @@ function SettingsPage() {
       });
     }
     
-    if (savedSecurity) setIs2FAEnabled(JSON.parse(savedSecurity).is2FAEnabled);
+    if (savedSecurity) {
+      try {
+        setIs2FAEnabled(JSON.parse(savedSecurity).is2FAEnabled);
+      } catch (error) {
+        console.error('Failed to parse security settings:', error);
+        localStorage.removeItem('securitySettings');
+      }
+    }
   }, []);
 
   return (
@@ -282,7 +316,10 @@ function SettingsPage() {
               type="checkbox"
               className="sr-only peer"
               checked={is2FAEnabled}
-              onChange={(e) => setIs2FAEnabled(e.target.checked)}
+              onChange={(e) => {
+                setIs2FAEnabled(e.target.checked);
+                localStorage.setItem('securitySettings', JSON.stringify({ is2FAEnabled: e.target.checked }));
+              }}
             />
             <div className="w-12 h-6 bg-gray-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
           </label>
@@ -291,7 +328,7 @@ function SettingsPage() {
         {/* Password Change */}
         <div className="py-6">
           <h3 className="font-medium text-gray-900 mb-4">Change Password</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <input
               type="password"
               value={currentPassword}
@@ -304,6 +341,13 @@ function SettingsPage() {
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               placeholder="New Password"
+              className="px-4 py-3 bg-gray-50 text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Confirm New Password"
               className="px-4 py-3 bg-gray-50 text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
