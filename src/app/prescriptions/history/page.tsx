@@ -13,35 +13,42 @@ function PrescriptionHistory() {
   
   const loadPrescriptions = () => {
     const savedPrescriptions = localStorage.getItem('prescriptions');
+    const defaultPrescriptions: Prescription[] = [
+      { 
+        id: 'PRX-001', 
+        patientName: 'John Doe', 
+        date: '1/15/2024', 
+        diagnosis: 'Hypertension management', 
+        notes: 'Monitor blood pressure regularly', 
+        patientId: 'PAT-001', 
+        medicines: [
+          { id: '1', name: 'Lisinopril', dosage: '10mg', frequency: 'once-daily', duration: '30-days', instructions: 'Take with food' }
+        ], 
+        status: 'completed' 
+      },
+      { 
+        id: 'PRX-002', 
+        patientName: 'Sarah Wilson', 
+        date: '1/18/2024', 
+        diagnosis: 'Bacterial infection', 
+        notes: 'Complete full course', 
+        patientId: 'PAT-002', 
+        medicines: [
+          { id: '2', name: 'Amoxicillin', dosage: '500mg', frequency: 'three-times-daily', duration: '7-days', instructions: 'Take with food' }
+        ], 
+        status: 'active' 
+      },
+    ];
+    
     if (savedPrescriptions) {
-      setPrescriptions(JSON.parse(savedPrescriptions));
+      try {
+        setPrescriptions(JSON.parse(savedPrescriptions));
+      } catch (error) {
+        console.warn('Failed to parse prescriptions data:', error);
+        localStorage.removeItem('prescriptions');
+        setPrescriptions(defaultPrescriptions);
+      }
     } else {
-      const defaultPrescriptions: Prescription[] = [
-        { 
-          id: 'PRX-001', 
-          patientName: 'John Doe', 
-          date: '1/15/2024', 
-          diagnosis: 'Hypertension management', 
-          notes: 'Monitor blood pressure regularly', 
-          patientId: 'PAT-001', 
-          medicines: [
-            { id: '1', name: 'Lisinopril', dosage: '10mg', frequency: 'once-daily', duration: '30-days', instructions: 'Take with food' }
-          ], 
-          status: 'completed' 
-        },
-        { 
-          id: 'PRX-002', 
-          patientName: 'Sarah Wilson', 
-          date: '1/18/2024', 
-          diagnosis: 'Bacterial infection', 
-          notes: 'Complete full course', 
-          patientId: 'PAT-002', 
-          medicines: [
-            { id: '2', name: 'Amoxicillin', dosage: '500mg', frequency: 'three-times-daily', duration: '7-days', instructions: 'Take with food' }
-          ], 
-          status: 'active' 
-        },
-      ];
       setPrescriptions(defaultPrescriptions);
     }
   };
@@ -82,7 +89,7 @@ function PrescriptionHistory() {
     return matchesSearch && matchesStatus && matchesDate;
   });
 
-  const exportToPDF = () => {
+  const printPrescriptions = () => {
     const content = `PRESCRIPTION HISTORY REPORT\n\nGenerated: ${new Date().toLocaleDateString()}\n\n` +
       filteredPrescriptions.map(p => 
         `ID: ${p.id}\nPatient: ${p.patientName}\nDate: ${p.date}\nDiagnosis: ${p.diagnosis}\nStatus: ${p.status}\nMedicines: ${p.medicines?.length || 0}\n\n`
@@ -100,10 +107,19 @@ function PrescriptionHistory() {
     printWindow?.print();
   };
 
+  const escapeCSVField = (value: any): string => {
+    if (value == null) return '';
+    const str = String(value);
+    if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+      return `"${str.replace(/"/g, '""')}"`;
+    }
+    return str;
+  };
+
   const exportToCSV = () => {
     const headers = 'ID,Patient,Date,Diagnosis,Status\n';
     const content = filteredPrescriptions.map(p => 
-      `${p.id},${p.patientName},${p.date},${p.diagnosis},${p.status}`
+      `${escapeCSVField(p.id)},${escapeCSVField(p.patientName)},${escapeCSVField(p.date)},${escapeCSVField(p.diagnosis)},${escapeCSVField(p.status)}`
     ).join('\n');
     const blob = new Blob([headers + content], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
@@ -122,11 +138,11 @@ function PrescriptionHistory() {
         </div>
         <div className="flex flex-col sm:flex-row gap-3">
           <button 
-            onClick={exportToPDF}
+            onClick={printPrescriptions}
             className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 flex items-center justify-center gap-2 transition-colors"
           >
             <Download className="w-4 h-4" />
-            Export PDF
+            Print Report
           </button>
           <button 
             onClick={exportToCSV}

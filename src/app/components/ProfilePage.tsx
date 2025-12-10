@@ -61,7 +61,11 @@ export default function ProfilePage() {
           <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 text-center">
             <div className="w-24 h-24 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-2xl font-bold text-white">
-                {profileData.fullName.split(' ').map(n => n[0]).join('')}
+                {(() => {
+                  const fullName = profileData.fullName || '';
+                  const initials = fullName.split(' ').filter(n => n).map(n => n[0]).join('').toUpperCase();
+                  return initials || 'DS';
+                })()}
               </span>
             </div>
             <h2 className="text-xl font-semibold text-gray-900 mb-2">{profileData.fullName}</h2>

@@ -7,20 +7,20 @@ function PatientDetailsView({ patient }: { patient: Patient }) {
   const [patientPrescriptions, setPatientPrescriptions] = useState<any[]>([]);
   
   useEffect(() => {
-  if (!patient) return; // safety check
-
-  const savedPrescriptions = localStorage.getItem("prescriptions");
-
-  if (savedPrescriptions) {
-    const prescriptions = JSON.parse(savedPrescriptions);
-
-    const patientPrescs = prescriptions.filter(
-      (p: any) => p.patientId === patient.id
-    );
-
-    setPatientPrescriptions(patientPrescs);
-  }
-}, [patient]);
+    if (!patient) return;
+    
+    const savedPrescriptions = localStorage.getItem('prescriptions');
+    if (savedPrescriptions) {
+      try {
+        const prescriptions = JSON.parse(savedPrescriptions);
+        const patientPrescs = prescriptions.filter((p: any) => p.patientId === patient.id);
+        setPatientPrescriptions(patientPrescs);
+      } catch (error) {
+        console.warn('Failed to parse prescriptions data:', error);
+        setPatientPrescriptions([]);
+      }
+    }
+  }, [patient]);
 
 
   return (
@@ -102,10 +102,18 @@ export default function PatientRecords({ selectedPatient, setSelectedPatient }: 
     const counts: {[key: string]: number} = {};
     
     if (savedPrescriptions) {
-      const prescriptions = JSON.parse(savedPrescriptions);
-      patientList.forEach(patient => {
-        counts[patient.id] = prescriptions.filter((p: any) => p.patientId === patient.id).length;
-      });
+      try {
+        const prescriptions = JSON.parse(savedPrescriptions);
+        patientList.forEach(patient => {
+          counts[patient.id] = prescriptions.filter((p: any) => p.patientId === patient.id).length;
+        });
+      } catch (error) {
+        console.warn('Failed to parse prescriptions for counts:', error);
+        localStorage.removeItem('prescriptions');
+        patientList.forEach(patient => {
+          counts[patient.id] = 0;
+        });
+      }
     } else {
       patientList.forEach(patient => {
         counts[patient.id] = 0;
@@ -119,13 +127,21 @@ export default function PatientRecords({ selectedPatient, setSelectedPatient }: 
     const savedPatients = localStorage.getItem('patients');
     let patientList: Patient[];
     
+    const defaultPatients = [
+      { id: 'PAT-001', name: 'John Doe', gender: 'Male', phone: '+1 (555) 123-4567', email: 'j.doe@gmail.com', lastVisit: '1/15/2024', prescriptions: 12 },
+      { id: 'PAT-002', name: 'Sarah Wilson', gender: 'Female', phone: '+1 (555) 234-5678', email: 's.wilson@gmail.com', lastVisit: '1/18/2024', prescriptions: 5 },
+    ];
+    
     if (savedPatients) {
-      patientList = JSON.parse(savedPatients);
+      try {
+        patientList = JSON.parse(savedPatients);
+      } catch (error) {
+        console.warn('Failed to parse patients data:', error);
+        localStorage.removeItem('patients');
+        patientList = defaultPatients;
+      }
     } else {
-      patientList = [
-        { id: 'PAT-001', name: 'John Doe', gender: 'Male', phone: '+1 (555) 123-4567', email: 'j.doe@gmail.com', lastVisit: '1/15/2024', prescriptions: 12 },
-        { id: 'PAT-002', name: 'Sarah Wilson', gender: 'Female', phone: '+1 (555) 234-5678', email: 's.wilson@gmail.com', lastVisit: '1/18/2024', prescriptions: 5 },
-      ];
+      patientList = defaultPatients;
     }
     
     setPatients(patientList);
@@ -204,7 +220,7 @@ export default function PatientRecords({ selectedPatient, setSelectedPatient }: 
                         <td className="py-4 px-4 text-gray-700">{patient.gender}</td>
                         <td className="py-4 px-4 text-gray-700 hidden sm:table-cell">{patient.phone}</td>
                         <td className="py-4 px-4 text-gray-700 hidden md:table-cell">{patient.lastVisit}</td>
-                        <td className="py-4 px-4 text-gray-700 hidden lg:table-cell">{patient.prescriptions}</td>
+                        <td className="py-4 px-4 text-gray-700 hidden lg:table-cell">{prescriptionCounts[patient.id] || 0}</td>
                         <td className="py-4 px-4">
                           <button
                             onClick={() => setSelectedPatient(selectedPatient?.id === patient.id ? null : patient)}

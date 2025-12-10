@@ -7,7 +7,7 @@ interface HeaderProps {
 
 function Header({ setCurrentPage }: HeaderProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [userInitials, setUserInitials] = useState('DS');
+  const [userInitials, setUserInitials] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -28,8 +28,10 @@ function Header({ setCurrentPage }: HeaderProps) {
   }, []);
 
   const handleSignOut = () => {
-    localStorage.clear();
-    alert('Signed out successfully!');
+    localStorage.removeItem('userPassword');
+    localStorage.removeItem('securitySettings');
+    localStorage.removeItem('doctorProfile');
+    console.log('Signed out successfully!');
     window.location.reload();
   };
 
@@ -40,7 +42,7 @@ function Header({ setCurrentPage }: HeaderProps) {
           <h1 className="text-lg lg:text-xl font-semibold text-gray-900">Medical Dashboard</h1>
           <p className="text-sm text-gray-600 hidden sm:block">Manage Prescriptions And Patient Records</p>
         </div>
-        <div className="relative">
+        <div ref={dropdownRef} className="relative">
           <button 
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 transition-colors"
