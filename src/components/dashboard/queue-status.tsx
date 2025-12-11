@@ -32,7 +32,13 @@ export default function QueueStatus() {
     if (!queueData) return;
     
     const interval = setInterval(() => {
-      setPosition(prev => prev > 1 ? prev - 1 : 1);
+      setPosition(prev => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          return 1;
+        }
+        return prev - 1;
+      });
     }, 10000);
     
     return () => clearInterval(interval);
