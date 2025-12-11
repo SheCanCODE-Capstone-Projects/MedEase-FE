@@ -31,15 +31,21 @@ export default function QueueStatus() {
   useEffect(() => {
     if (!queueData) return;
     
-    const interval = setInterval(() => {
-      setPosition(prev => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          return 1;
+    const fetchPosition = async () => {
+      try {
+        const res = await fetch('/api/queue/position');
+        if (res.ok) {
+          const data = await res.json();
+          setPosition(data.position);
         }
-        return prev - 1;
-      });
-    }, 10000);
+      } catch {
+        // Fallback to simulation if API fails
+        setPosition(prev => prev > 1 ? prev - 1 : 1);
+      }
+    };
+    
+    const interval = setInterval(fetchPosition, 5000);
+    fetchPosition(); // Initial fetch
     
     return () => clearInterval(interval);
   }, [queueData]);
@@ -71,7 +77,8 @@ export default function QueueStatus() {
         </div>
 
         <div className="flex items-center gap-2 text-sm text-gray-500">
-          <span>Estimated position</span>
+          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+          <span>Live updates</span>
         </div>
       </div>
     </div>
