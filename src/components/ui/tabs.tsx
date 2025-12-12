@@ -26,6 +26,7 @@ export const TabsList = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
+    role="tablist"
     className={`inline-flex h-10 items-center justify-center rounded-md bg-gray-100 p-1 text-gray-500 ${className || ""}`}
     {...props}
   />
@@ -42,8 +43,9 @@ export const TabsTrigger = React.forwardRef<
   const isActive = context.value === value
   
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    context.onValueChange(value)
     onClick?.(e)
+    if (e.defaultPrevented) return
+    context.onValueChange(value)
   }
   
   const getActiveStyles = () => {
@@ -63,6 +65,9 @@ export const TabsTrigger = React.forwardRef<
       ref={ref}
       type="button"
       onClick={handleClick}
+      role="tab"
+      aria-selected={isActive}
+      tabIndex={isActive ? 0 : -1}
       className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 ${
         getActiveStyles()
       } ${className || ""}`}

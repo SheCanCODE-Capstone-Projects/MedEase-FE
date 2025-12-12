@@ -39,6 +39,8 @@ export default function Register() {
     insuranceProvider: "",
     insuranceNumber: "",
     phone: "",
+    licenseNumber: "",
+    pharmacyName: "",
   })
   const [errors, setErrors] = useState<Partial<RegistrationFormData>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -166,6 +168,7 @@ export default function Register() {
         insuranceProvider: "",
         insuranceNumber: "",
         phone: "",
+        licenseNumber: "",
         pharmacyName: "",
       })
 
@@ -216,12 +219,12 @@ export default function Register() {
           )}
 
           <Tabs value={userRole} onValueChange={(value) => setUserRole(value as UserRole)} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="patient" className="text-sm flex items-center gap-2">
+            <TabsList className="grid w-full grid-cols-2 gap-50 mb-6">
+              <TabsTrigger value="patient" className="text-base flex items-center gap-2">
                 <User className="h-4 w-4" />
                 Patient
               </TabsTrigger>
-              <TabsTrigger value="pharmacist" className="text-sm flex items-center gap-2">
+              <TabsTrigger value="pharmacist" className="text-base flex items-center gap-2">
                 <Pill className="h-4 w-4" />
                 Pharmacist
               </TabsTrigger>
@@ -254,7 +257,7 @@ export default function Register() {
                   <Input
                     id="lastName"
                     name="lastName"
-                    placeholder=" "
+                    placeholder="Doe"
                     value={formData.lastName}
                     onChange={handleInputChange}
                     disabled={isSubmitting}
