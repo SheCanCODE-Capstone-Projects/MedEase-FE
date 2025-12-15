@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { UserPlus, User, Pill, Mail, Lock, Phone, Calendar, Shield } from "lucide-react"
+import Link from "next/link"
 
 type UserRole = "patient" | "pharmacist"
 
@@ -144,13 +145,23 @@ export default function Register() {
 
       const referenceNumber = `RW-${userRole.toUpperCase()}-${Date.now().toString().slice(-6)}`
       
+      const { confirmPassword, password, ...sanitizedData } = formData
+      
       const registrationData = {
         role: userRole,
         referenceNumber,
-        ...formData,
+        ...sanitizedData,
+        password, // Include password in payload only (not in logs)
       }
 
-      console.log("Registration data:", registrationData)
+      // Log only non-sensitive data for debugging
+      console.log("Registration submitted:", { 
+        role: userRole, 
+        referenceNumber,
+        email: formData.email,
+        firstName: formData.firstName,
+        lastName: formData.lastName
+      })
       if (userRole === "pharmacist") {
         setSuccessMessage(`Welcome, ${formData.firstName}! Your pharmacist registration has been submitted successfully for verification. Reference number: ${referenceNumber}. You will be notified once your credentials are verified.`)
       } else {
@@ -220,7 +231,7 @@ export default function Register() {
 
           <Tabs value={userRole} onValueChange={(value) => setUserRole(value as UserRole)} className="w-full">
             <TabsList className="grid w-full grid-cols-2 gap-50 mb-6">
-              <TabsTrigger value="patient" className="text-base flex items-center gap-2">
+              <TabsTrigger value="patient" className="text-base` flex items-center gap-2">
                 <User className="h-4 w-4" />
                 Patient
               </TabsTrigger>
@@ -241,7 +252,7 @@ export default function Register() {
                   <Input
                     id="firstName"
                     name="firstName"
-                    placeholder=""
+                    placeholder="muziga"
                     value={formData.firstName}
                     onChange={handleInputChange}
                     disabled={isSubmitting}
@@ -257,7 +268,7 @@ export default function Register() {
                   <Input
                     id="lastName"
                     name="lastName"
-                    placeholder="Doe"
+                    placeholder="judith"
                     value={formData.lastName}
                     onChange={handleInputChange}
                     disabled={isSubmitting}
@@ -276,7 +287,7 @@ export default function Register() {
                   id="email"
                   name="email"
                   type="email"
-                  placeholder=""
+                  placeholder="judith@gmail.com"
                   value={formData.email}
                   onChange={handleInputChange}
                   disabled={isSubmitting}
@@ -335,7 +346,7 @@ export default function Register() {
                         id="phone"
                         name="phone"
                         type="tel"
-                        placeholder=""
+                        placeholder="+250 788 123 456"
                         value={formData.phone || ""}
                         onChange={handleInputChange}
                         disabled={isSubmitting}
@@ -499,9 +510,9 @@ export default function Register() {
 
               <p className="text-center text-xs sm:text-sm text-gray-600">
                 Already have an account?{" "}
-                <a href="/login" className="text-blue-600 hover:text-blue-700 font-medium">
+                <Link href="/login" className="text-blue-600 hover:text-blue-700 font-medium">
                   Sign in
-                </a>
+                </Link>
               </p>
             </form>
           </Tabs>
