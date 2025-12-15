@@ -230,8 +230,8 @@ export default function Register() {
           )}
 
           <Tabs value={userRole} onValueChange={(value) => setUserRole(value as UserRole)} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 gap-50 mb-6">
-              <TabsTrigger value="patient" className="text-base` flex items-center gap-2">
+            <TabsList className="grid w-full grid-cols-2 gap-5 mb-6">
+              <TabsTrigger value="patient" className="text-base flex items-center gap-2">
                 <User className="h-4 w-4" />
                 Patient
               </TabsTrigger>
