@@ -253,7 +253,7 @@ export default function Register() {
                   <Input
                     id="firstName"
                     name="firstName"
-                    placeholder="muziga"
+                    placeholder="Enter your first name"
                     value={formData.firstName}
                     onChange={handleInputChange}
                     disabled={isSubmitting}
@@ -269,7 +269,7 @@ export default function Register() {
                   <Input
                     id="lastName"
                     name="lastName"
-                    placeholder="judith"
+                    placeholder="Enter your last name"
                     value={formData.lastName}
                     onChange={handleInputChange}
                     disabled={isSubmitting}
