@@ -40,7 +40,8 @@ export default function Register() {
     insuranceProvider: "",
     insuranceNumber: "",
     phone: "",
-   
+    licenseNumber: "",
+    pharmacyName: "",
   })
   const [errors, setErrors] = useState<Partial<RegistrationFormData>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -258,8 +259,10 @@ export default function Register() {
                     onChange={handleInputChange}
                     disabled={isSubmitting}
                     className={errors.firstName ? "border-red-500" : ""}
+                    aria-invalid={!!errors.firstName}
+                    aria-describedby={errors.firstName ? "firstName-error" : undefined}
                   />
-                  {errors.firstName && <p className="text-xs text-red-500">{errors.firstName}</p>}
+                  {errors.firstName && <p id="firstName-error" className="text-xs text-red-500">{errors.firstName}</p>}
                 </div>
 
                 <div className="space-y-2">
@@ -274,8 +277,10 @@ export default function Register() {
                     onChange={handleInputChange}
                     disabled={isSubmitting}
                     className={errors.lastName ? "border-red-500" : ""}
+                    aria-invalid={!!errors.lastName}
+                    aria-describedby={errors.lastName ? "lastName-error" : undefined}
                   />
-                  {errors.lastName && <p className="text-xs text-red-500">{errors.lastName}</p>}
+                  {errors.lastName && <p id="lastName-error" className="text-xs text-red-500">{errors.lastName}</p>}
                 </div>
               </div>
 
@@ -293,8 +298,10 @@ export default function Register() {
                   onChange={handleInputChange}
                   disabled={isSubmitting}
                   className={errors.email ? "border-red-500" : ""}
+                  aria-invalid={!!errors.email}
+                  aria-describedby={errors.email ? "email-error" : undefined}
                 />
-                {errors.email && <p className="text-xs text-red-500">{errors.email}</p>}
+                {errors.email && <p id="email-error" className="text-xs text-red-500">{errors.email}</p>}
               </div>
 
               {userRole === "patient" && (
@@ -312,8 +319,10 @@ export default function Register() {
                       onChange={handleInputChange}
                       disabled={isSubmitting}
                       className={errors.dateOfBirth ? "border-red-500" : ""}
+                      aria-invalid={!!errors.dateOfBirth}
+                      aria-describedby={errors.dateOfBirth ? "dateOfBirth-error" : undefined}
                     />
-                    {errors.dateOfBirth && <p className="text-xs text-red-500">{errors.dateOfBirth}</p>}
+                    {errors.dateOfBirth && <p id="dateOfBirth-error" className="text-xs text-red-500">{errors.dateOfBirth}</p>}
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
@@ -327,6 +336,8 @@ export default function Register() {
                         value={formData.gender || ""}
                         onChange={handleSelectChange}
                         disabled={isSubmitting}
+                        aria-invalid={errors.gender ? "true" : "false"}
+                        aria-describedby={errors.gender ? "gender-error" : undefined}
                         className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                           errors.gender ? "border-red-500" : "border-gray-300"
                         }`}
@@ -336,7 +347,7 @@ export default function Register() {
                         <option value="Female">Female</option>
                         <option value="Other">Other</option>
                       </select>
-                      {errors.gender && <p className="text-xs text-red-500">{errors.gender}</p>}
+                      {errors.gender && <p id="gender-error" className="text-xs text-red-500">{errors.gender}</p>}
                     </div>
 
                     <div className="space-y-2">
@@ -352,8 +363,10 @@ export default function Register() {
                         onChange={handleInputChange}
                         disabled={isSubmitting}
                         className={errors.phone ? "border-red-500" : ""}
+                        aria-invalid={!!errors.phone}
+                        aria-describedby={errors.phone ? "phone-error" : undefined}
                       />
-                      {errors.phone && <p className="text-xs text-red-500">{errors.phone}</p>}
+                      {errors.phone && <p id="phone-error" className="text-xs text-red-500">{errors.phone}</p>}
                     </div>
                   </div>
 
@@ -368,6 +381,8 @@ export default function Register() {
                       value={formData.insuranceProvider || ""}
                       onChange={handleSelectChange}
                       disabled={isSubmitting}
+                      aria-invalid={errors.insuranceProvider ? "true" : "false"}
+                      aria-describedby={errors.insuranceProvider ? "insurance-error" : undefined}
                       className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                         errors.insuranceProvider ? "border-red-500" : "border-gray-300"
                       }`}
@@ -379,7 +394,7 @@ export default function Register() {
                       <option value="Private">Private Insurance</option>
                       <option value="None">No Insurance</option>
                     </select>
-                    {errors.insuranceProvider && <p className="text-xs text-red-500">{errors.insuranceProvider}</p>}
+                    {errors.insuranceProvider && <p id="insurance-error" className="text-xs text-red-500">{errors.insuranceProvider}</p>}
                   </div>
 
                   <div className="space-y-2">
@@ -394,8 +409,10 @@ export default function Register() {
                       onChange={handleInputChange}
                       disabled={isSubmitting}
                       className={errors.insuranceNumber ? "border-red-500" : ""}
+                      aria-invalid={!!errors.insuranceNumber}
+                      aria-describedby={errors.insuranceNumber ? "insuranceNumber-error" : undefined}
                     />
-                    {errors.insuranceNumber && <p className="text-xs text-red-500">{errors.insuranceNumber}</p>}
+                    {errors.insuranceNumber && <p id="insuranceNumber-error" className="text-xs text-red-500">{errors.insuranceNumber}</p>}
                   </div>
                 </>
               )}
@@ -414,8 +431,10 @@ export default function Register() {
                   onChange={handleInputChange}
                   disabled={isSubmitting}
                   className={errors.password ? "border-red-500" : ""}
+                  aria-invalid={!!errors.password}
+                  aria-describedby={errors.password ? "password-error" : undefined}
                 />
-                {errors.password && <p className="text-xs text-red-500">{errors.password}</p>}
+                {errors.password && <p id="password-error" className="text-xs text-red-500">{errors.password}</p>}
               </div>
 
               <div className="space-y-2">
@@ -432,8 +451,10 @@ export default function Register() {
                   onChange={handleInputChange}
                   disabled={isSubmitting}
                   className={errors.confirmPassword ? "border-red-500" : ""}
+                  aria-invalid={!!errors.confirmPassword}
+                  aria-describedby={errors.confirmPassword ? "confirmPassword-error" : undefined}
                 />
-                {errors.confirmPassword && <p className="text-xs text-red-500">{errors.confirmPassword}</p>}
+                {errors.confirmPassword && <p id="confirmPassword-error" className="text-xs text-red-500">{errors.confirmPassword}</p>}
               </div>
 
               {userRole === "pharmacist" && (
@@ -452,8 +473,10 @@ export default function Register() {
                       onChange={handleInputChange}
                       disabled={isSubmitting}
                       className={errors.phone ? "border-red-500" : ""}
+                      aria-invalid={!!errors.phone}
+                      aria-describedby={errors.phone ? "pharmacistPhone-error" : undefined}
                     />
-                    {errors.phone && <p className="text-xs text-red-500">{errors.phone}</p>}
+                    {errors.phone && <p id="pharmacistPhone-error" className="text-xs text-red-500">{errors.phone}</p>}
                   </div>
 
                   <div className="space-y-2">
@@ -469,8 +492,10 @@ export default function Register() {
                       onChange={handleInputChange}
                       disabled={isSubmitting}
                       className={errors.licenseNumber ? "border-red-500" : ""}
+                      aria-invalid={!!errors.licenseNumber}
+                      aria-describedby={errors.licenseNumber ? "licenseNumber-error" : undefined}
                     />
-                    {errors.licenseNumber && <p className="text-xs text-red-500">{errors.licenseNumber}</p>}
+                    {errors.licenseNumber && <p id="licenseNumber-error" className="text-xs text-red-500">{errors.licenseNumber}</p>}
                   </div>
 
                   <div className="space-y-2">
@@ -485,8 +510,10 @@ export default function Register() {
                       onChange={handleInputChange}
                       disabled={isSubmitting}
                       className={errors.pharmacyName ? "border-red-500" : ""}
+                      aria-invalid={!!errors.pharmacyName}
+                      aria-describedby={errors.pharmacyName ? "pharmacyName-error" : undefined}
                     />
-                    {errors.pharmacyName && <p className="text-xs text-red-500">{errors.pharmacyName}</p>}
+                    {errors.pharmacyName && <p id="pharmacyName-error" className="text-xs text-red-500">{errors.pharmacyName}</p>}
                   </div>
 
                   <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
