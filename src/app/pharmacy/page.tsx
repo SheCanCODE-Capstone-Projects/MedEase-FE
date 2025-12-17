@@ -3,12 +3,30 @@
 import { useState, useEffect } from 'react';
 import { Pill, QrCode, Search, History, Package } from 'lucide-react';
 
+interface Medicine {
+  name: string;
+  quantity: number;
+  available: boolean;
+  dispensed: number;
+}
+
+interface Prescription {
+  id: string;
+  patientName: string;
+  condition: string;
+  medicines: Medicine[];
+  status: string;
+  prescribedDate: string;
+  dispensedDate?: string;
+  notes?: string;
+}
+
 export default function PharmacyDashboard() {
   const [activeTab, setActiveTab] = useState('retrieve');
   const [prescriptionRef, setPrescriptionRef] = useState('');
-  const [currentPrescription, setCurrentPrescription] = useState<any>(null);
+  const [currentPrescription, setCurrentPrescription] = useState<Prescription | null>(null);
   const [notes, setNotes] = useState('');
-  const [dispensingHistory, setDispensingHistory] = useState<any[]>([]);
+  const [dispensingHistory, setDispensingHistory] = useState<Prescription[]>([]);
 
   useEffect(() => {
     try {
@@ -45,14 +63,24 @@ export default function PharmacyDashboard() {
 
   const handleDispense = (medicineIndex: number, quantity: number) => {
     if (currentPrescription) {
-      const updated = { ...currentPrescription };
-      updated.medicines[medicineIndex].dispensed = quantity;
+      const updated = {
+        ...currentPrescription,
+        medicines: currentPrescription.medicines.map((med, idx) =>
+          idx === medicineIndex ? { ...med, dispensed: quantity } : med
+        )
+      };
       setCurrentPrescription(updated);
     }
   };
 
   const handleConfirmDispensing = () => {
     if (currentPrescription) {
+      const hasDispensed = currentPrescription.medicines.some(med => med.dispensed > 0);
+      if (!hasDispensed) {
+        alert('Please dispense at least one medicine before confirming.');
+        return;
+      }
+
       try {
         const dispensedItems = JSON.parse(localStorage.getItem('dispensedHistory') || '[]');
         const newItem = {
