@@ -83,7 +83,7 @@ Generated on: ${new Date().toLocaleString()}
           </button>
         </div>
 
-        <Link href="/dashboard" className="flex items-center justify-center gap-2 text-gray-700 hover:text-gray-900">
+        <Link href="/patientDashboard" className="flex items-center justify-center gap-2 text-gray-700 hover:text-gray-900">
           <ArrowLeft className="w-4 h-4" />
           <span className="font-medium">Return to Dashboard</span>
         </Link>
