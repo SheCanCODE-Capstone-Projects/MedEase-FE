@@ -104,7 +104,7 @@ export default function RequestMedicalRecords() {
             </div>
 
             <Link 
-              href="/dashboard" 
+              href="/patientDashboard" 
               className="block w-full border border-gray-300 bg-white hover:bg-gray-50 py-2 px-4 rounded-md text-center"
             >
               Back to Dashboard
