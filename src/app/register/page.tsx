@@ -215,13 +215,29 @@ export default function Register() {
             ? "bg-blue-50/50" 
             : "bg-green-50/50"
         }`}>
-          <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 flex items-center gap-2">
-          <UserPlus className="h-6 w-6" />
-          Create Account
-        </CardTitle>
-          <CardDescription className={`text-base transition-colors duration-500 ${
-            userRole === "patient" ? "text-blue-600" : "text-green-600"
-          }`}>Begin your journey to better health and wellness with our trusted community</CardDescription>
+           <div className="flex justify-center">
+    <div
+      className={`w-14 h-14 sm:w-16 sm:h-16 rounded-xl flex items-center justify-center shadow-lg transition-colors duration-300 ${
+        userRole === "patient"
+          ? "bg-blue-500"
+          : "bg-green-600"
+      }`}
+    >
+      <UserPlus className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+    </div>
+  </div>
+          <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 text-center">
+  Create Account
+</CardTitle>
+
+<CardDescription
+  className={`text-base text-center transition-colors duration-500 ${
+    userRole === "patient" ? "text-blue-600" : "text-green-600"
+  }`}
+>
+  Begin your journey to better health and wellness with our trusted community
+</CardDescription>
+
         </CardHeader>
         <CardContent className="p-4 sm:p-6">
           {successMessage && (
@@ -554,3 +570,4 @@ export default function Register() {
     </div>
   )
 }
+
