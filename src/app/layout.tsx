@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: "MedEase | Digital Medical Ordinance System - Rwanda",
   description: "Secure, efficient, and connected healthcare for all Rwandans. Digital prescriptions, verified authenticity, and AI-powered medical support.",
   icons: {
-    icon: "/favicon.ico",
+    icon: "/public/doctor.png",
   },
 };
 
