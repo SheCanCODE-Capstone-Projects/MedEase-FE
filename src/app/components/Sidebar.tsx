@@ -1,23 +1,34 @@
 import { FileText, LayoutDashboard, Plus, Settings, Users, Menu, X, Clock, Stethoscope } from "lucide-react";
-import { PageType } from "../types";
 import { useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
 
 interface SidebarProps {
-  currentPage: PageType;
-  setCurrentPage: (page: PageType) => void;
+  dashboardType: 'doctor' | 'patient';
 }
 
-export default function Sidebar({ currentPage, setCurrentPage }: SidebarProps) {
+export default function Sidebar({ dashboardType }: SidebarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
   
-  const menuItems: Array<{ id: PageType; icon: React.ElementType; label: string }> = [
-    { id: 'dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-    { id: 'queue', icon: Clock, label: 'Patient Queue' },
-    { id: 'create-prescription', icon: Plus, label: 'Create Prescription' },
-    { id: 'patient-records', icon: Users, label: 'Patient Records' },
-    { id: 'prescription-history', icon: FileText, label: 'Prescription History' },
-    { id: 'settings', icon: Settings, label: 'Settings' },
+  const doctorMenuItems = [
+    { id: 'dashboard', icon: LayoutDashboard, label: 'Dashboard', path: '/doctorDashboard/dashboard' },
+    { id: 'queue', icon: Clock, label: 'Patient Queue', path: '/doctorDashboard/patientsQueue' },
+    { id: 'create-prescription', icon: Plus, label: 'Create Prescription', path: '/doctorDashboard/prescriptions/create' },
+    { id: 'patient-records', icon: Users, label: 'Patient Records', path: '/doctorDashboard/patients' },
+    { id: 'prescription-history', icon: FileText, label: 'Prescription History', path: '/doctorDashboard/prescriptions/history' },
+    { id: 'settings', icon: Settings, label: 'Settings', path: '/doctorDashboard/settings' },
   ];
+
+  const patientMenuItems = [
+    { id: 'dashboard', icon: LayoutDashboard, label: 'Dashboard', path: '/patientDashboard/dashboard' },
+    { id: 'queue', icon: Clock, label: 'Join Queue', path: '/patientDashboard/Queue' },
+    { id: 'medical-records', icon: FileText, label: 'Medical Records', path: '/patientDashboard/medical-record-view' },
+    { id: 'request-records', icon: Plus, label: 'Request Records', path: '/patientDashboard/request-medical-records' },
+    { id: 'report-ready', icon: Users, label: 'Report Ready', path: '/patientDashboard/report-ready' },
+  ];
+
+  const menuItems = dashboardType === 'doctor' ? doctorMenuItems : patientMenuItems;
 
   return (
     <>
@@ -50,22 +61,23 @@ export default function Sidebar({ currentPage, setCurrentPage }: SidebarProps) {
             <h1 className="text-xl font-bold text-white">MedEase</h1>
             
           </div>
-          <p className="text-sm mx-10 text-gray-400">Doctor Portal</p>
+          <p className="text-sm mx-10 text-gray-400">{dashboardType === 'doctor' ? 'Doctor Portal' : 'Patient Portal'}</p>
           <hr className="border-gray-700 mt-4" />
         </div>
         
         <nav className="space-y-2">
           {menuItems.map((item) => {
             const Icon = item.icon;
+            const isActive = pathname === item.path;
             return (
               <button
                 key={item.id}
                 onClick={() => {
-                  setCurrentPage(item.id);
+                  router.push(item.path);
                   setIsMobileMenuOpen(false);
                 }}
                 className={`w-full text-sm flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                  currentPage === item.id
+                  isActive
                     ? 'bg-blue-600 text-white'
                     : 'text-gray-300 hover:bg-gray-800 hover:text-white'
                 }`}

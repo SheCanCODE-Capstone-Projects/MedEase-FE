@@ -1,14 +1,12 @@
 import { ChevronDown, LogOut, Settings, User } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 
-interface HeaderProps {
-  setCurrentPage?: (page: 'settings' | 'dashboard' | 'profile') => void;
-}
-
-function Header({ setCurrentPage }: HeaderProps) {
+function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [userInitials, setUserInitials] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const savedProfile = localStorage.getItem('doctorProfile');
@@ -56,14 +54,14 @@ function Header({ setCurrentPage }: HeaderProps) {
           {isDropdownOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
               <button 
-                onClick={() => { setCurrentPage?.('profile'); setIsDropdownOpen(false); }}
+                onClick={() => { router.push('/doctorDashboard/profile'); setIsDropdownOpen(false); }}
                 className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-3 text-gray-700"
               >
                 <User className="w-4 h-4" />
                 Profile
               </button>
               <button 
-                onClick={() => { setCurrentPage?.('settings'); setIsDropdownOpen(false); }}
+                onClick={() => { router.push('/doctorDashboard/settings'); setIsDropdownOpen(false); }}
                 className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-3 text-gray-700"
               >
                 <Settings className="w-4 h-4" />
