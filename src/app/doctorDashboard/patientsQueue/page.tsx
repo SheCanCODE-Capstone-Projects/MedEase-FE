@@ -1,15 +1,18 @@
+"use client"
+
 import { Clock, User, ArrowRight, CheckCircle } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-import { QueuePatient, PageType } from "../types";
+import { useRouter } from "next/navigation";
+import { useToast } from "../../hooks/useToast";
+import { ToastContainer } from "../../components/Toast";
+import { QueuePatient } from "../../types";
 
-interface PatientQueueProps {
-  setCurrentPage?: (page: PageType) => void;
-}
-
-export default function PatientQueue({ setCurrentPage }: PatientQueueProps) {
+export default function PatientQueue() {
   const [queue, setQueue] = useState<QueuePatient[]>([]);
   const [activeConsultation, setActiveConsultation] = useState<QueuePatient | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
+  const router = useRouter();
+  const { showSuccess, showError, showInfo, toasts, removeToast } = useToast();
 
   useEffect(() => {
     loadQueue();
@@ -79,12 +82,28 @@ export default function PatientQueue({ setCurrentPage }: PatientQueueProps) {
       setActiveConsultation(nextPatient);
       localStorage.setItem('patientQueue', JSON.stringify(updatedQueue));
       broadcastUpdate();
+      showSuccess(`Called ${nextPatient.name} for consultation`);
+    } else {
+      showInfo('No patients waiting in queue');
+    }
+  };
+
+  const completeConsultation = () => {
+    if (activeConsultation) {
+      const updatedQueue = queue.map(p => 
+        p.id === activeConsultation.id ? { ...p, status: 'completed' as const } : p
+      );
+      setQueue(updatedQueue.filter(p => p.status !== 'completed'));
+      setActiveConsultation(null);
+      localStorage.setItem('patientQueue', JSON.stringify(updatedQueue));
+      broadcastUpdate();
+      showSuccess(`Consultation with ${activeConsultation.name} completed`);
     }
   };
 
   const consultPatient = () => {
-    if (activeConsultation && setCurrentPage) {
-      setCurrentPage('create-prescription');
+    if (activeConsultation) {
+      router.push('/doctorDashboard/prescriptions/create');
     }
   };
 
@@ -92,7 +111,8 @@ export default function PatientQueue({ setCurrentPage }: PatientQueueProps) {
   const completedToday = queue.filter(p => p.status === 'completed').length;
 
   return (
-    <div className="space-y-6">
+    <>
+      <div className="space-y-6">
       <div>
         <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Patient Queue</h1>
         <p className="text-gray-600">Manage your consultation queue</p>
@@ -120,13 +140,22 @@ export default function PatientQueue({ setCurrentPage }: PatientQueueProps) {
                     <p><span className="font-medium">Reason:</span> {activeConsultation.reason}</p>
                   </div>
                 </div>
-                <button
-                  onClick={consultPatient}
-                  className="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center justify-center gap-2 transition-colors"
-                >
-                  <CheckCircle className="w-5 h-5" />
-                  Consult
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={consultPatient}
+                    className="flex-1 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center justify-center gap-2 transition-colors"
+                  >
+                    <CheckCircle className="w-5 h-5" />
+                    Consult
+                  </button>
+                  <button
+                    onClick={completeConsultation}
+                    className="flex-1 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center justify-center gap-2 transition-colors"
+                  >
+                    <ArrowRight className="w-5 h-5" />
+                    Next
+                  </button>
+                </div>
               </div>
             ) : (
               <div className="text-center py-8">
@@ -228,6 +257,8 @@ export default function PatientQueue({ setCurrentPage }: PatientQueueProps) {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+      <ToastContainer toasts={toasts} onRemove={removeToast} />
+    </>
   );
 }

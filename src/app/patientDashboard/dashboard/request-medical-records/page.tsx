@@ -47,7 +47,7 @@ export default function RequestMedicalRecords() {
     
     if (verificationCode === generatedCode) {
       await new Promise((resolve) => setTimeout(resolve, 500))
-      router.push("/report-ready")
+      router.push("/patientDashboard/dashboard/report-ready")
       setIsLoading(false)
     } else {
       setError("Invalid verification code. Please try again.")

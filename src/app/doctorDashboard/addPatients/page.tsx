@@ -1,13 +1,12 @@
+"use client"
+
 import { Plus, Save } from "lucide-react";
 import { useState } from "react";
+import { useToast } from "../../hooks/useToast";
+import { ToastContainer } from "../../components/Toast";
 
-interface AddPatientProps {
-  showSuccess?: (message: string) => void;
-  showError?: (message: string) => void;
-  showInfo?: (message: string) => void;
-}
-
-function AddPatient({ showSuccess, showError, showInfo }: AddPatientProps) {
+function AddPatient() {
+  const { showSuccess, showError, showInfo, toasts, removeToast } = useToast();
   const [formData, setFormData] = useState({
     fullName: '',
     dateOfBirth: '',
@@ -42,7 +41,7 @@ function AddPatient({ showSuccess, showError, showInfo }: AddPatientProps) {
     existingPatients.push(patientData);
     localStorage.setItem('patients', JSON.stringify(existingPatients));
     
-    showSuccess?.(`Patient ${formData.fullName} saved successfully with ID: ${patientId}`);
+    showSuccess(`Patient ${formData.fullName} saved successfully with ID: ${patientId}`);
     setFormData({
       fullName: '', dateOfBirth: '', phoneNumber: '', emergencyPhone: '',
       gender: '', insuranceProvider: '', insuranceNumber: '', chronicDiseases: '', allergies: ''
@@ -50,7 +49,8 @@ function AddPatient({ showSuccess, showError, showInfo }: AddPatientProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <>
+      <div className="space-y-6">
       <div>
         <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Add New Patient</h1>
         <p className="text-gray-600">Register a new patient in the system</p>
@@ -215,8 +215,11 @@ function AddPatient({ showSuccess, showError, showInfo }: AddPatientProps) {
           </div>
         </div>
       </form>
-    </div>
+      <ToastContainer toasts={toasts} onRemove={removeToast} />
+      </div>
+    </>
   );
 }
 
 export default AddPatient;
+

@@ -1,3 +1,5 @@
+"use client"
+
 import { User, MapPin, Phone, Mail, Award, Building } from "lucide-react";
 import { useState, useEffect } from "react";
 

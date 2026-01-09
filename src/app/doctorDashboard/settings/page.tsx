@@ -1,14 +1,11 @@
 "use client";
 import { FileText, Key, Save, Shield, Users } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useToast } from "../../hooks/useToast";
+import { ToastContainer } from "../../components/Toast";
 
-interface SettingsPageProps {
-  showSuccess?: (message: string) => void;
-  showError?: (message: string) => void;
-  showInfo?: (message: string) => void;
-}
-
-function SettingsPage({ showSuccess, showError, showInfo }: SettingsPageProps) {
+function SettingsPage() {
+  const { showSuccess, showError, showInfo, toasts, removeToast } = useToast();
   const [is2FAEnabled, setIs2FAEnabled] = useState(true);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -32,40 +29,40 @@ function SettingsPage({ showSuccess, showError, showInfo }: SettingsPageProps) {
 
   const saveProfile = () => {
     localStorage.setItem('doctorProfile', JSON.stringify(profileData));
-    showSuccess?.('Profile saved successfully!');
+    showSuccess('Profile saved successfully!');
   };
 
   const saveClinic = () => {
     localStorage.setItem('clinicInfo', JSON.stringify(clinicData));
-    showSuccess?.('Clinic information saved successfully!');
+    showSuccess('Clinic information saved successfully!');
   };
 
   const updatePassword = () => {
     if (!currentPassword || !newPassword || !confirmPassword) {
-      showError?.('Please fill in all password fields.');
+      showError('Please fill in all password fields.');
       return;
     }
     
     if (newPassword !== confirmPassword) {
-      showError?.('New password and confirmation do not match.');
+      showError('New password and confirmation do not match.');
       return;
     }
     
     const savedPassword = localStorage.getItem('userPassword');
     
     if (!savedPassword) {
-      showError?.('No password set. Please contact administrator to set initial password.');
+      showError('No password set. Please contact administrator to set initial password.');
       return;
     }
     
     if (savedPassword !== currentPassword) {
-      showError?.('Current password is incorrect.');
+      showError('Current password is incorrect.');
       return;
     }
     
     localStorage.setItem('userPassword', newPassword);
     localStorage.setItem('securitySettings', JSON.stringify({ is2FAEnabled }));
-    showSuccess?.('Password updated successfully!');
+    showSuccess('Password updated successfully!');
     setCurrentPassword('');
     setNewPassword('');
     setConfirmPassword('');
@@ -73,7 +70,7 @@ function SettingsPage({ showSuccess, showError, showInfo }: SettingsPageProps) {
 
   const saveSecurity = () => {
     localStorage.setItem('securitySettings', JSON.stringify({ is2FAEnabled }));
-    showSuccess?.('Security settings saved successfully!');
+    showSuccess('Security settings saved successfully!');
   };
 
   useEffect(() => {
@@ -131,7 +128,8 @@ function SettingsPage({ showSuccess, showError, showInfo }: SettingsPageProps) {
   }, []);
 
   return (
-    <div className="space-y-6">
+    <>
+      <div className="space-y-6">
       <div>
         <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Settings</h1>
         <p className="text-gray-600">Manage your profile, clinic information and security settings</p>
@@ -366,7 +364,9 @@ function SettingsPage({ showSuccess, showError, showInfo }: SettingsPageProps) {
           </button>
         </div>
       </div>
-    </div>
+      </div>
+      <ToastContainer toasts={toasts} onRemove={removeToast} />
+    </>
   );
 }
 export default SettingsPage;

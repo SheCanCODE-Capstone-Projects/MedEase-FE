@@ -1,12 +1,11 @@
 "use client";
 import { AlertCircle, Clock, FileText, Plus, Users, TrendingUp } from "lucide-react";
-import { PageType, Stat } from "../types";
+import { useRouter } from "next/navigation";
+import { Stat } from "../../types";
 
-interface DashboardProps {
-  setCurrentPage: (page: PageType) => void;
-}
-
-export default function Doctordashboard({ setCurrentPage }: DashboardProps) {
+export default function Doctordashboard() {
+  const router = useRouter();
+  
   const stats: Stat[] = [
     { title: "Today's Prescriptions", value: '24', subtitle: '+3 from yesterday', icon: FileText },
     { title: 'Pending Prescriptions', value: '8', subtitle: 'Awaiting dispensing', icon: Clock },
@@ -22,7 +21,7 @@ export default function Doctordashboard({ setCurrentPage }: DashboardProps) {
           <p className="text-gray-600">Welcome back, Dr. Smith. Here's your practice summary.</p>
         </div>
         <button 
-          onClick={() => setCurrentPage('add-patient')}
+          onClick={() => router.push('/doctorDashboard/addPatients')}
           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2 transition-colors"
         >
           <Plus className="w-4 h-4" />
@@ -59,7 +58,7 @@ export default function Doctordashboard({ setCurrentPage }: DashboardProps) {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <button 
-            onClick={() => setCurrentPage('create-prescription')}
+            onClick={() => router.push('/doctorDashboard/prescriptions/create')}
             className="p-4 bg-gray-50 hover:bg-gray-100 rounded-lg flex items-center gap-4 transition-colors text-left"
           >
             <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
@@ -72,7 +71,7 @@ export default function Doctordashboard({ setCurrentPage }: DashboardProps) {
           </button>
           
           <button 
-            onClick={() => setCurrentPage('patient-records')}
+            onClick={() => router.push('/doctorDashboard/patients')}
             className="p-4 bg-gray-50 hover:bg-gray-100 rounded-lg flex items-center gap-4 transition-colors text-left"
           >
             <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
@@ -85,7 +84,7 @@ export default function Doctordashboard({ setCurrentPage }: DashboardProps) {
           </button>
 
           <button 
-            onClick={() => setCurrentPage('prescription-history')}
+            onClick={() => router.push('/doctorDashboard/prescriptions/history')}
             className="p-4 bg-gray-50 hover:bg-gray-100 rounded-lg flex items-center gap-4 transition-colors text-left"
           >
             <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">

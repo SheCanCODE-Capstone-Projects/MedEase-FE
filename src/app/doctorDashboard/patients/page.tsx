@@ -1,7 +1,9 @@
 "use client";
 import { Search, Users, Pill } from "lucide-react";
-import { Patient } from "../types";
+import { Patient } from "../../types";
 import { useState, useEffect } from "react";
+import { useToast } from "../../hooks/useToast";
+import { ToastContainer } from "../../components/Toast";
 
 function PatientDetailsView({ patient }: { patient: Patient }) {
   const [patientPrescriptions, setPatientPrescriptions] = useState<any[]>([]);
@@ -87,15 +89,12 @@ function PatientDetailsView({ patient }: { patient: Patient }) {
   );
 }
 
-interface PatientRecordsProps {
-  selectedPatient: Patient | null;
-  setSelectedPatient: (patient: Patient | null) => void;
-}
-
-export default function PatientRecords({ selectedPatient, setSelectedPatient }: PatientRecordsProps) {
+export default function PatientRecords() {
   const [searchTerm, setSearchTerm] = useState('');
   const [patients, setPatients] = useState<Patient[]>([]);
   const [prescriptionCounts, setPrescriptionCounts] = useState<{[key: string]: number}>({});
+  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+  const { toasts, removeToast } = useToast();
   
   const calculatePrescriptionCounts = (patientList: Patient[]) => {
     const savedPrescriptions = localStorage.getItem('prescriptions');
@@ -169,8 +168,9 @@ export default function PatientRecords({ selectedPatient, setSelectedPatient }: 
     patient?.id?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  return (
-    <div className="space-y-6">
+  return(
+    <>
+      <div className="space-y-6">
       <div>
         <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Patient Records</h1>
         <p className="text-gray-600">Search and manage patient medical records</p>
@@ -254,6 +254,8 @@ export default function PatientRecords({ selectedPatient, setSelectedPatient }: 
           )}
         </div>
       </div>
-    </div>
+      <ToastContainer toasts={toasts} onRemove={removeToast} />
+      </div>
+    </>
   );
 }

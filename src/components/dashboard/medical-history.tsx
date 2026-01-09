@@ -6,7 +6,7 @@ export default function MedicalHistory() {
   const router = useRouter()
   
   const handleRequestReport = () => {
-    router.push('/request-medical-records')
+    router.push('/patientDashboard/dashboard/request-medical-records')
   }
 
   return (

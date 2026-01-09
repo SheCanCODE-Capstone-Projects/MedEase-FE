@@ -1,8 +1,11 @@
 "use client";
 import { FileText, Plus, Search, Send, X, CheckCircle } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useToast } from "../../../hooks/useToast";
+import { ToastContainer } from "../../../components/Toast";
 
-function PatientFoundView({ patient }: { patient: any }, showSuccess?: (message: string) => void) {
+function PatientFoundView({ patient }: { patient: any }) {
+  const { showSuccess } = useToast();
   const [draftPrescriptions, setDraftPrescriptions] = useState<any[]>([]);
   
   useEffect(() => {
@@ -23,7 +26,7 @@ function PatientFoundView({ patient }: { patient: any }, showSuccess?: (message:
       );
       localStorage.setItem('prescriptions', JSON.stringify(updatedPrescriptions));
       setDraftPrescriptions(prev => prev.filter(p => p.id !== prescriptionId));
-      showSuccess?.('Prescription activated and sent to history!');
+      showSuccess('Prescription activated and sent to history!');
     }
   };
 
@@ -74,13 +77,10 @@ interface Medicine {
   instructions: string;
 }
 
-interface CreatePrescriptionProps {
-  showSuccess?: (message: string) => void;
-  showError?: (message: string) => void;
-  showInfo?: (message: string) => void;
-}
+interface CreatePrescriptionProps {}
 
-function CreatePrescription({ showSuccess, showError, showInfo }: CreatePrescriptionProps) {
+function CreatePrescription({}: CreatePrescriptionProps) {
+  const { showSuccess, showError, showInfo, toasts, removeToast } = useToast();
   const [patientId, setPatientId] = useState<string>('');
   const [diagnosis, setDiagnosis] = useState<string>('');
   const [medicines, setMedicines] = useState<Medicine[]>([]);
@@ -107,7 +107,7 @@ function CreatePrescription({ showSuccess, showError, showInfo }: CreatePrescrip
         duration: '',
         instructions: ''
       });
-      showSuccess?.('Medicine added successfully!');
+      showSuccess('Medicine added successfully!');
     }
   };
 
@@ -120,31 +120,47 @@ function CreatePrescription({ showSuccess, showError, showInfo }: CreatePrescrip
   };
 
   const searchPatient = () => {
+    if (!patientId.trim()) {
+      showError('Please enter a Patient ID to search.');
+      return;
+    }
+
     const savedPatients = localStorage.getItem('patients');
+    let patients = [];
+    
+    // Default patients if none exist
+    const defaultPatients = [
+      { id: 'PAT-001', name: 'John Doe', gender: 'Male', phone: '+1 (555) 123-4567', email: 'j.doe@gmail.com', lastVisit: '1/15/2024' },
+      { id: 'PAT-002', name: 'Sarah Wilson', gender: 'Female', phone: '+1 (555) 234-5678', email: 's.wilson@gmail.com', lastVisit: '1/18/2024' },
+    ];
+    
     if (savedPatients) {
       try {
-        const patients = JSON.parse(savedPatients);
-        const patient = patients.find((p: any) => p.id === patientId);
-        if (patient) {
-          setFoundPatient(patient);
-          showSuccess?.(`Patient ${patient.name} found!`);
-        } else {
-          setFoundPatient(null);
-          showError?.('Patient not found. Please check the ID and try again.');
-        }
+        patients = JSON.parse(savedPatients);
       } catch (error) {
         console.error('Failed to parse patients data:', error);
-        setFoundPatient(null);
-        showError?.('Error searching for patient.');
+        localStorage.removeItem('patients');
+        patients = defaultPatients;
+        localStorage.setItem('patients', JSON.stringify(defaultPatients));
       }
     } else {
-      showError?.('No patients found in the system.');
+      patients = defaultPatients;
+      localStorage.setItem('patients', JSON.stringify(defaultPatients));
+    }
+    
+    const patient = patients.find((p: any) => p.id.toLowerCase() === patientId.toLowerCase());
+    if (patient) {
+      setFoundPatient(patient);
+      showSuccess(`Patient ${patient.name} found!`);
+    } else {
+      setFoundPatient(null);
+      showError(`Patient with ID "${patientId}" not found. Try PAT-001 or PAT-002.`);
     }
   };
 
   const savePrescription = (isDraft: boolean = false) => {
     if (!foundPatient || !diagnosis.trim() || medicines.length === 0) {
-      showError?.('Please search for a valid patient, add diagnosis, and at least one medicine.');
+      showError('Please search for a valid patient, add diagnosis, and at least one medicine.');
       return;
     }
     
@@ -176,16 +192,17 @@ function CreatePrescription({ showSuccess, showError, showInfo }: CreatePrescrip
       existingPrescriptions.push(prescriptionData);
       localStorage.setItem('prescriptions', JSON.stringify(existingPrescriptions));
       
-      showSuccess?.(`Prescription ${isDraft ? 'saved as draft' : 'created and sent'} with ID: ${prescriptionId}`);
+      showSuccess(`Prescription ${isDraft ? 'saved as draft' : 'created and sent'} with ID: ${prescriptionId}`);
       setPatientId(''); setDiagnosis(''); setMedicines([]); setFoundPatient(null);
     } catch (error) {
       console.error('Failed to save prescription:', error);
-      showError?.('Failed to save prescription. Please try again.');
+      showError('Failed to save prescription. Please try again.');
     }
   };
 
   return (
-    <div className="space-y-6">
+    <>
+      <div className="space-y-6">
       <div>
         <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Create New Prescription</h1>
         <p className="text-gray-600">Create and send prescriptions to patients</p>
@@ -368,7 +385,10 @@ function CreatePrescription({ showSuccess, showError, showInfo }: CreatePrescrip
           Save and Send ({medicines.length} medicines)
         </button>
       </div>
-    </div>
+      <ToastContainer toasts={toasts} onRemove={removeToast} />
+      </div>
+    </>
   );
 }
+
 export default CreatePrescription;
