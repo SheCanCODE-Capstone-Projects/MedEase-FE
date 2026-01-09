@@ -47,6 +47,24 @@ export default function Register() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [successMessage, setSuccessMessage] = useState("")
   const [errorMessage, setErrorMessage] = useState("")
+  const [passwordStrength, setPasswordStrength] = useState({ score: 0, feedback: "" })
+
+  const checkPasswordStrength = (password: string) => {
+    let score = 0
+    let feedback = ""
+    
+    if (password.length >= 8) score++
+    if (/[a-z]/.test(password)) score++
+    if (/[A-Z]/.test(password)) score++
+    if (/\d/.test(password)) score++
+    if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) score++
+    
+    if (score < 3) feedback = "Weak - Add uppercase, numbers, and symbols"
+    else if (score < 4) feedback = "Medium - Add more character types"
+    else feedback = "Strong password"
+    
+    return { score, feedback }
+  }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -54,6 +72,11 @@ export default function Register() {
       ...prev,
       [name]: value,
     }))
+    
+    if (name === 'password') {
+      setPasswordStrength(checkPasswordStrength(value))
+    }
+    
     if (errors[name as keyof RegistrationFormData]) {
       setErrors((prev) => ({
         ...prev,
@@ -95,6 +118,8 @@ export default function Register() {
       newErrors.password = "Password is required"
     } else if (formData.password.trim().length < 8) {
       newErrors.password = "Password must be at least 8 characters"
+    } else if (passwordStrength.score < 3) {
+      newErrors.password = "Password is too weak. Use uppercase, lowercase, numbers, and symbols"
     }
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match"
@@ -455,6 +480,32 @@ export default function Register() {
                   aria-invalid={!!errors.password}
                   aria-describedby={errors.password ? "password-error" : undefined}
                 />
+                {formData.password && (
+                  <div className="mt-2">
+                    <div className="flex gap-1 mb-1">
+                      {[1, 2, 3, 4, 5].map((i) => (
+                        <div
+                          key={i}
+                          className={`h-1 flex-1 rounded ${
+                            i <= passwordStrength.score
+                              ? passwordStrength.score < 3
+                                ? "bg-red-500"
+                                : passwordStrength.score < 4
+                                ? "bg-yellow-500"
+                                : "bg-green-500"
+                              : "bg-gray-200"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <p className={`text-xs ${
+                      passwordStrength.score < 3 ? "text-red-600" :
+                      passwordStrength.score < 4 ? "text-yellow-600" : "text-green-600"
+                    }`}>
+                      {passwordStrength.feedback}
+                    </p>
+                  </div>
+                )}
                 {errors.password && <p id="password-error" className="text-xs text-red-500">{errors.password}</p>}
               </div>
 
