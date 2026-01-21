@@ -26,17 +26,18 @@ export default function PharmacyDashboard() {
   const [prescriptionRef, setPrescriptionRef] = useState('');
   const [currentPrescription, setCurrentPrescription] = useState<Prescription | null>(null);
   const [notes, setNotes] = useState('');
-  const [dispensingHistory, setDispensingHistory] = useState<Prescription[]>([]);
-
-  useEffect(() => {
+  
+rr  const loadDispensingHistory = () => {
     try {
       const history = JSON.parse(localStorage.getItem('dispensedHistory') || '[]');
-      setDispensingHistory(history);
+      return history;
     } catch (error) {
       console.error('Failed to load dispensing history:', error);
-      setDispensingHistory([]);
+      return [];
     }
-  }, []);
+  };
+  
+  const [dispensingHistory, setDispensingHistory] = useState<Prescription[]>(loadDispensingHistory);
 
   const mockPrescriptions = {
     'RX001': {
@@ -110,7 +111,10 @@ export default function PharmacyDashboard() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow p-6">
+          <button 
+            onClick={() => setActiveTab('retrieve')}
+            className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow text-left"
+          >
             <div className="flex items-center gap-3">
               <Package className="w-8 h-8 text-blue-500" />
               <div>
@@ -118,8 +122,11 @@ export default function PharmacyDashboard() {
                 <p className="text-2xl font-bold">12</p>
               </div>
             </div>
-          </div>
-          <div className="bg-white rounded-lg shadow p-6">
+          </button>
+          <button 
+            onClick={() => setActiveTab('history')}
+            className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow text-left"
+          >
             <div className="flex items-center gap-3">
               <Pill className="w-8 h-8 text-green-500" />
               <div>
@@ -127,8 +134,11 @@ export default function PharmacyDashboard() {
                 <p className="text-2xl font-bold">8</p>
               </div>
             </div>
-          </div>
-          <div className="bg-white rounded-lg shadow p-6">
+          </button>
+          <button 
+            onClick={() => setActiveTab('history')}
+            className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow text-left"
+          >
             <div className="flex items-center gap-3">
               <History className="w-8 h-8 text-purple-500" />
               <div>
@@ -136,7 +146,7 @@ export default function PharmacyDashboard() {
                 <p className="text-2xl font-bold">156</p>
               </div>
             </div>
-          </div>
+          </button>
         </div>
 
         {/* Navigation Tabs */}
@@ -219,7 +229,7 @@ export default function PharmacyDashboard() {
 
                     <h4 className="font-semibold mb-3">Prescribed Medicines</h4>
                     <div className="space-y-3">
-                      {currentPrescription.medicines.map((medicine: any, index: number) => (
+                      {currentPrescription.medicines.map((medicine: Medicine, index: number) => (
                         <div key={index} className="bg-white rounded-lg p-4 border">
                           <div className="flex justify-between items-center">
                             <div>
@@ -274,7 +284,7 @@ export default function PharmacyDashboard() {
                   {dispensingHistory.length === 0 ? (
                     <p className="text-gray-500 text-center py-8">No dispensing history yet.</p>
                   ) : (
-                    dispensingHistory.map((item: any, index: number) => (
+                    dispensingHistory.map((item: Prescription, index: number) => (
                       <div key={index} className="bg-gray-50 rounded-lg p-4">
                         <div className="flex justify-between items-start">
                           <div>
