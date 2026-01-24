@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Pill, QrCode, Search, History, Package } from 'lucide-react';
 
 interface Medicine {
@@ -27,10 +27,15 @@ export default function PharmacyDashboard() {
   const [currentPrescription, setCurrentPrescription] = useState<Prescription | null>(null);
   const [notes, setNotes] = useState('');
   
-rr  const loadDispensingHistory = () => {
+  const loadDispensingHistory = (): Prescription[] => {
+    if (typeof window === 'undefined') return [];
+    
     try {
-      const history = JSON.parse(localStorage.getItem('dispensedHistory') || '[]');
-      return history;
+      const historyData = localStorage.getItem('dispensedHistory');
+      if (!historyData) return [];
+      
+      const history = JSON.parse(historyData);
+      return Array.isArray(history) ? history : [];
     } catch (error) {
       console.error('Failed to load dispensing history:', error);
       return [];
@@ -64,6 +69,19 @@ rr  const loadDispensingHistory = () => {
 
   const handleDispense = (medicineIndex: number, quantity: number) => {
     if (currentPrescription) {
+      const medicine = currentPrescription.medicines[medicineIndex];
+      
+      // Validate quantity
+      if (quantity < 0) {
+        alert('Quantity cannot be negative');
+        return;
+      }
+      
+      if (quantity > medicine.quantity) {
+        alert(`Cannot dispense more than prescribed quantity (${medicine.quantity})`);
+        return;
+      }
+      
       const updated = {
         ...currentPrescription,
         medicines: currentPrescription.medicines.map((med, idx) =>
@@ -75,32 +93,40 @@ rr  const loadDispensingHistory = () => {
   };
 
   const handleConfirmDispensing = () => {
-    if (currentPrescription) {
-      const hasDispensed = currentPrescription.medicines.some(med => med.dispensed > 0);
-      if (!hasDispensed) {
-        alert('Please dispense at least one medicine before confirming.');
-        return;
-      }
+    if (!currentPrescription || typeof window === 'undefined') return;
+    
+    const hasDispensed = currentPrescription.medicines.some(med => med.dispensed > 0);
+    if (!hasDispensed) {
+      alert('Please dispense at least one medicine before confirming.');
+      return;
+    }
 
-      try {
-        const dispensedItems = JSON.parse(localStorage.getItem('dispensedHistory') || '[]');
-        const newItem = {
-          ...currentPrescription,
-          dispensedDate: new Date().toISOString(),
-          status: 'dispensed',
-          notes: notes
-        };
-        dispensedItems.push(newItem);
-        localStorage.setItem('dispensedHistory', JSON.stringify(dispensedItems));
-        setDispensingHistory(dispensedItems);
-        setCurrentPrescription(null);
-        setPrescriptionRef('');
-        setNotes('');
-        alert('Prescription dispensed successfully');
-      } catch (error) {
-        console.error('Failed to save dispensing record:', error);
-        alert('Failed to save dispensing record. Please try again.');
+    try {
+      const existingHistory = JSON.parse(localStorage.getItem('dispensedHistory') || '[]');
+      if (!Array.isArray(existingHistory)) {
+        throw new Error('Invalid history format');
       }
+      
+      const newItem: Prescription = {
+        ...currentPrescription,
+        dispensedDate: new Date().toISOString(),
+        status: 'dispensed',
+        notes: notes.trim() || undefined
+      };
+      
+      const updatedHistory = [...existingHistory, newItem];
+      localStorage.setItem('dispensedHistory', JSON.stringify(updatedHistory));
+      setDispensingHistory(updatedHistory);
+      
+      // Reset state
+      setCurrentPrescription(null);
+      setPrescriptionRef('');
+      setNotes('');
+      
+      alert('Prescription dispensed successfully');
+    } catch (error) {
+      console.error('Failed to save dispensing record:', error);
+      alert('Failed to save dispensing record. Please try again.');
     }
   };
 
@@ -244,8 +270,19 @@ rr  const loadDispensingHistory = () => {
                                 type="number"
                                 max={medicine.quantity}
                                 min="0"
+                                step="1"
                                 value={medicine.dispensed}
-                                onChange={(e) => handleDispense(index, parseInt(e.target.value) || 0)}
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  if (value === '') {
+                                    handleDispense(index, 0);
+                                  } else {
+                                    const numValue = parseInt(value, 10);
+                                    if (!isNaN(numValue)) {
+                                      handleDispense(index, numValue);
+                                    }
+                                  }
+                                }}
                                 className="w-20 px-2 py-1 border rounded"
                                 disabled={!medicine.available}
                               />
@@ -290,7 +327,7 @@ rr  const loadDispensingHistory = () => {
                           <div>
                             <p className="font-medium">{item.patientName}</p>
                             <p className="text-sm text-gray-600">Ref: {item.id}</p>
-                            <p className="text-sm text-gray-600">Dispensed: {new Date(item.dispensedDate).toLocaleDateString()}</p>
+                            <p className="text-sm text-gray-600">Dispensed: {item.dispensedDate ? new Date(item.dispensedDate).toLocaleDateString() : 'N/A'}</p>
                             {item.notes && <p className="text-sm text-gray-600">Notes: {item.notes}</p>}
                           </div>
                           <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">
