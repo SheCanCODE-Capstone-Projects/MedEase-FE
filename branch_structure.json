@@ -1,0 +1,33 @@
+{
+  "default_branch": "main",
+  "branches": [
+    "3-real-time-queue-display",
+    "4-doctor-dashboard-ui",
+    "6-digital-prescription",
+    "7-patient-prescription-viewer",
+    "fix/path",
+    "main",
+    "origin",
+    "super-admin-dashboard-ui"
+  ],
+  "parent": {
+    "3-real-time-queue-display": "main",
+    "4-doctor-dashboard-ui": "main",
+    "6-digital-prescription": "main",
+    "7-patient-prescription-viewer": "main",
+    "fix/path": "main",
+    "main": null,
+    "origin": "main",
+    "super-admin-dashboard-ui": "main"
+  },
+  "order": [
+    "main",
+    "3-real-time-queue-display",
+    "4-doctor-dashboard-ui",
+    "6-digital-prescription",
+    "7-patient-prescription-viewer",
+    "fix/path",
+    "origin",
+    "super-admin-dashboard-ui"
+  ]
+}
